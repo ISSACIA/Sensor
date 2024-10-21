@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturas de Calidad del Aire</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .header-image {
+            display: block;
+            margin: 0 auto;
+            max-width: 20%;
+            height: auto;
+        }
+        .data {
+            background: #F5F5DC;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lecturas de Calidad del Aire</h1>
+    <img src="https://www.comunicacionsocial.uam.mx/identidaduam/images/el-emblema.jpg" alt="Encabezado" class="header-image">
+    <div id="output" class="data"></div>
+
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('https://g6lodwkte4.execute-api.us-east-1.amazonaws.com/dev');
+                if (!response.ok) {
+                    throw new Error('Error al obtener los datos. Intenta nuevamente más tarde.');
+                }
+                const data = await response.json();
+                document.getElementById('output').innerHTML = `
+                    <p>PM2.5: ${data.pm25} µg/m³</p>
+                    <p>PM10: ${data.pm10} µg/m³</p>
+                `;
+            } catch (error) {
+                document.getElementById('output').innerHTML = `
+                    <p style="color:red;">${error.message}</p>
+                `;
+            }
+        }
+
+        // Llama a fetchData cada 5 segundos
+        setInterval(fetchData, 5000);
+        // También llama a fetchData una vez al cargar la página
+        fetchData();
+    </script>
+</body>
+</html>
